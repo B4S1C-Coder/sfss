@@ -1,0 +1,54 @@
+require('dotenv').config();
+const express = require('express');
+const setupContainer = require('./config/container');
+const connectDatabase = require('./config/database');
+const setupRoutes = require('./routes');
+const errorHandler = require('./middlewares/errorHandler');
+const logger = require('./config/logger');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Request logging middleware
+app.use((req, res, next) => {
+  logger.info('Incoming request', {
+    method: req.method,
+    path: req.path,
+    ip: req.ip,
+  });
+  next();
+});
+
+// Setup DI Container
+const container = setupContainer();
+
+// Setup routes
+setupRoutes(app, container);
+
+// Health check
+app.get('/health', (req, res) => {
+  res.json({ status: 'healthy', timestamp: new Date().toISOString() });
+});
+
+// Global error handler (must be last)
+app.use(errorHandler);
+
+// Start server
+async function startServer() {
+  await connectDatabase();
+  
+  app.listen(PORT, () => {
+    logger.info(`Server running on port ${PORT}`);
+  });
+}
+
+startServer().catch(err => {
+  logger.error('Failed to start server', { error: err.message });
+  process.exit(1);
+});
+
+module.exports = app;

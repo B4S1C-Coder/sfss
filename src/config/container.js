@@ -2,6 +2,7 @@ const { createContainer, asClass, asValue, asFunction } = require('awilix');
 const glob = require('glob');
 const path = require('path');
 const User = require('../models/User');
+const File = require('../models/File');
 const logger = require('./logger');
 const PasswordEncoder = require('../utils/PasswordEncoder');
 const JwtService = require('../utils/JwtService');
@@ -28,6 +29,7 @@ function setupContainer() {
   // Register models
   container.register({
     userModel: asValue(User),
+    fileModel: asValue(File)
   });
 
   // Register middlewares

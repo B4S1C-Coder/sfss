@@ -14,11 +14,25 @@ const fileSchema = new mongoose.Schema({
   folder: { type: String, default: 'uploads' },
   status: {
     type: String,
-    enum: ['pending', 'uploaded', 'deleted'],
+    enum: ['pending', 'uploaded', 'expired', 'deleted'],
     default: 'pending'
-  }
+  },
+  targetUserEmails: [{ type: String, required: true }],
+  accessCode: { type: String, required: true },
+  expiryDurationMinutes: { type: Number, required: true, default: 5 },
+  firstAccessedAt: { type: Date, default: null },
+  expiresAt: { type: Date, default: null },
 },{
   timestamps: true
+});
+
+fileSchema.index({ s3Key: 1 });
+fileSchema.index({ userId: 1, status: 1 });
+fileSchema.index({ accessCode: 1 });
+
+fileSchema.virtual('isExpired').get(function() {
+  if (!this.expiresAt) return false;
+  return new Date() > this.expiresAt;
 });
 
 module.exports = mongoose.model('File', fileSchema);

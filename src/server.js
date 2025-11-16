@@ -5,6 +5,19 @@ const connectDatabase = require('./config/database');
 const setupRoutes = require('./routes');
 const errorHandler = require('./middlewares/errorHandler');
 const logger = require('./config/logger');
+const initS3Bucket = require('./config/bucket');
+
+(async function () {
+  if (process.env.TRIGGER_LOCALSTACK_BUCKET_CREATION !== "yes") return;
+
+  try {
+    await initS3Bucket();
+    logger.info("S3 bucket init complete");
+  } catch (err) {
+    logger.error(`S3 bucket init failed (continuing startup): ${err}`);
+    process.exit(1);
+  }
+})();
 
 const app = express();
 const PORT = process.env.PORT || 3000;

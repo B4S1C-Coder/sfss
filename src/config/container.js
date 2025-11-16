@@ -5,7 +5,9 @@ const User = require('../models/User');
 const logger = require('./logger');
 const PasswordEncoder = require('../utils/PasswordEncoder');
 const JwtService = require('../utils/JwtService');
+const S3Service = require('../utils/S3Service');
 const authenticationFactory = require("../middlewares/authenticate");
+const createS3Client = require('./aws');
 
 function setupContainer() {
   const container = createContainer();
@@ -19,6 +21,8 @@ function setupContainer() {
   container.register({
     passwordEncoder: asClass(PasswordEncoder).singleton(),
     jwtService: asClass(JwtService).singleton(),
+    s3Client: asFunction(createS3Client).singleton(),
+    s3Service: asClass(S3Service).singleton(),
   });
 
   // Register models

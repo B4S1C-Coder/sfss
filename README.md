@@ -150,6 +150,48 @@ curl -X GET -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZ
 }
 ```
 
+- Get presigned URL for file upload
+```bash
+curl -X POST http://localhost:3000/api/upload/presigned-url -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MTliNGI0ZTViZmJmMDM3YTJiNzQ0MSIsImVtYWlsIjoidGVzdEBlbWFpbC5jb20iLCJuYW1lIjoiRm9vIEJhciIsImlhdCI6MTc2MzI5MjM0MSwiZXhwIjoxNzYzMzc4NzQxfQ.JDBo9Eyqe5NgNZHXufe-AD3RzrL13gojzkBrNpaBE0k" -H "Content-Type: application/json" -d '{"fileName":"test.txt","fileType":"text","folder":"uploads"}'
+```
+
+```json
+{
+  "success": true,
+  "data": {
+    "uploadUrl": "http://localhost:4566/test-bucket/uploads/6ee0f2b7-a391-4ee0-8844-dcf044772b9a-test.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=test%2F20251116%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251116T112957Z&X-Amz-Expires=300&X-Amz-Signature=49dcd3539fda4e4c0d6feea498d21622458b0a0df1908bc3027dad22fd9b8a46&X-Amz-SignedHeaders=host&x-amz-checksum-crc32=AAAAAA%3D%3D&x-amz-sdk-checksum-algorithm=CRC32&x-id=PutObject",
+    "key": "uploads/6ee0f2b7-a391-4ee0-8844-dcf044772b9a-test.txt",
+    "fileUrl": "https://test-bucket.s3.us-east-1.amazonaws.com/uploads/6ee0f2b7-a391-4ee0-8844-dcf044772b9a-test.txt"
+  },
+  "message": "Upload the file directly to the uploadUrl via PUT"
+}
+```
+
+- Upload to s3 URL
+```bash
+curl -X PUT http://localhost:4566/test-bucket/uploads/6ee0f2b7-a391-4ee0-8844-dcf044772b9a-test.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=test%2F20251116%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20251116T112957Z&X-Amz-Expires=300&X-Amz-Signature=49dcd3539fda4e4c0d6feea498d21622458b0a0df1908bc3027dad22fd9b8a46&X-Amz-SignedHeaders=host&x-amz-checksum-crc32=AAAAAA%3D%3D&x-amz-sdk-checksum-algorithm=CRC32&x-id=PutObject -H "Content-Type: text/plain" --data-binary test.txt
+```
+
+```bash
+[1]   Done                    curl -X PUT http://localhost:4566/test-bucket/uploads/6ee0f2b7-a391-4ee0-8844-dcf044772b9a-test.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256
+```
+
+- Download from s3 URL
+```bash
+curl -X POST http://localhost:3000/api/upload/confirm -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MTliNGI0ZTViZmJmMDM3YTJiNzQ0MSIsImVtYWlsIjoidGVzdEBlbWFpbC5jb20iLCJuYW1lIjoiRm9vIEJhciIsImlhdCI6MTc2MzI5MjM0MSwiZXhwIjoxNzYzMzc4NzQxfQ.JDBo9Eyqe5NgNZHXufe-AD3RzrL13gojzkBrNpaBE0k" -H "Content-Type: application/json" -d '{"key":"uploads/6ee0f2b7-a391-4ee0-8844-dcf044772b9a-test.txt","fileUrl":"https://localhost:4566/uploads/6ee0f2b7-a391-4ee0-8844-dcf044772b9a-test.txt"}'
+```
+
+```json
+{
+  "success": true,
+  "message": "Upload confirmed",
+  "data": {
+    "key": "uploads/6ee0f2b7-a391-4ee0-8844-dcf044772b9a-test.txt",
+    "fileUrl": "https://localhost:4566/uploads/6ee0f2b7-a391-4ee0-8844-dcf044772b9a-test.txt"
+  }
+}
+```
+
 ## Running the backend (locally)
 1. Start the MongoDB container:
 ```bash

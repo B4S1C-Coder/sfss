@@ -6,6 +6,7 @@ const setupRoutes = require('./routes');
 const errorHandler = require('./middlewares/errorHandler');
 const logger = require('./config/logger');
 const initS3Bucket = require('./config/bucket');
+const cors = require('cors');
 
 (async function () {
   if (process.env.TRIGGER_LOCALSTACK_BUCKET_CREATION !== "yes") return;
@@ -23,8 +24,17 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
+
+app.use(cors({
+  origin: 'http://localhost:3000', // or '*' for dev
+  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization']
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// app.options('/*', cors());
 
 // Request logging middleware
 app.use((req, res, next) => {
@@ -35,6 +45,8 @@ app.use((req, res, next) => {
   });
   next();
 });
+
+app.use(express.static('public'));
 
 // Setup DI Container
 const container = setupContainer();

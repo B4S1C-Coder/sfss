@@ -13,6 +13,8 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import AuthGuardClient from "@/components/authguard-client"
+import { FileCard } from "@/components/file-card"
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function Page() {
   return (
@@ -39,8 +41,25 @@ export default function Page() {
             </div>
           </header>
           <div className="flex flex-1 flex-col gap-4 p-4">
-            <div className="bg-muted/50 mx-auto h-24 w-full max-w-3xl rounded-xl" />
-            <div className="bg-muted/50 mx-auto h-[100vh] w-full max-w-3xl rounded-xl" />
+            <Card className="bg-transparent shadow-none border border-border">
+              <CardHeader>
+                <CardTitle>Your Uploads</CardTitle>
+                <CardDescription>You can see your previously uploaded files here.</CardDescription>
+              </CardHeader>
+              <Separator />
+              <div className="flex flex-col items-center gap-4 overflow-y-auto max-h-[450px] pr-2">
+                <FileCard />
+                <FileCard />
+                <FileCard />
+                <FileCard />
+                <FileCard />
+                <FileCard />
+                <FileCard />
+                <FileCard />
+              </div>
+            </Card>
+            {/* <div className="bg-muted/50 mx-auto h-24 w-full max-w-3xl rounded-xl" />
+            <div className="bg-muted/50 mx-auto h-[100vh] w-full max-w-3xl rounded-xl" /> */}
           </div>
         </SidebarInset>
         <SidebarRight />

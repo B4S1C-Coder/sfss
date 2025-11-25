@@ -5,7 +5,7 @@ export type FileData = {
   s3Key: string
   fileUrl: string
   status: string
-  accessCode: number
+  accessCode: number | null
   targetUserEmails: string[]
   expiryDurationMinutes: number
   firstAccessedAt: string

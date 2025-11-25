@@ -37,7 +37,7 @@ async function initS3Bucket() {
       {
         AllowedHeaders: ["*"],
         AllowedMethods: ["PUT", "POST", "GET"],
-        AllowedOrigins: [`http://localhost:${process.env.PORT}`],
+        AllowedOrigins: [`http://localhost:${process.env.PORT}`, process.env.FRONTEND_URL ?? "http://localhost:3000"],
         ExposeHeaders: ["ETag"],
       }
     ]

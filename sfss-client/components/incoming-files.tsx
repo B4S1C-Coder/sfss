@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { getIncomingFiles } from "@/lib/api"
-import { FileCard } from "./file-card"
+import { IncomingFileCard } from "./incoming-file-card"
 import { Spinner } from "./ui/spinner"
 import { FileData } from "@/lib/types"
 
@@ -76,7 +76,7 @@ export default function IncomingFilesList() {
         <div className="text-sm text-muted-foreground py-4">No files shared with you.</div>
       ) : (
         files.map((f) => (
-          <FileCard key={f.id} data={f} />
+          <IncomingFileCard key={f.id} data={f} />
         ))
       )}
     </div>

@@ -95,6 +95,19 @@ export async function getUserUploadedFiles(token: string) {
   })
 }
 
+export async function getFileDownloadLink(token: string, s3key: string, accessCode: string) {
+  return request("/api/upload/download", {
+    method: "POST",
+    headers: { 
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      s3Key: s3key, accessCode: accessCode
+    }),
+  })
+}
+
 export function logout() {
   localStorage.removeItem("token")
   localStorage.removeItem("user")

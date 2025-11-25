@@ -6,8 +6,10 @@ const crypto = require('crypto');
 
 @Service()
 class FileService {
-  constructor({ fileModel }) {
+  constructor({ fileModel, userService, emailService }) {
     this.fileModel = fileModel;
+    this.userService = userService;
+    this.emailService = emailService;
   }
 
   generateAccessCode() {
@@ -25,8 +27,42 @@ class FileService {
 
     const savedFile = await file.save();
     logger.info('File record created', { fileId: savedFile._id, s3Key: savedFile.s3Key });
+
+    // Sending Email
+    let uploaderEmail = null;
+    try {
+      const uploader = await this.userService.getUserById(savedFile.userId);
+      uploaderEmail = uploader?.email || null;
+    } catch (err) {
+      logger.warn('Could not fetch uploader email', { error: err.message });
+    }
+
+    if (this.emailService) {
+      try {
+        await Promise.all(
+          savedFile.targetUserEmails.map(email => this.emailService.sendAccessCodeEmail({
+            to: email,
+            fileName: savedFile.fileName,
+            accessCode: savedFile.accessCode,
+            expiryDurationMinutes: savedFile.expiryDurationMinutes,
+            uploaderEmail
+          }))
+        );
+      } catch (err) {
+        logger.error('Failed to send access code emails', { error: err.message });
+      }
+    }
     
     return savedFile;
+  }
+
+  async getFilesSharedWithUser(userEmail) {
+    return await this.fileModel.find({
+      targetUserEmails: userEmail,
+      status: { $in: ['uploaded', 'expired'] }
+    })
+    .populate('userId', 'name email')
+    .sort({ createdAt: -1 });
   }
 
   async confirmUpload(s3Key) {

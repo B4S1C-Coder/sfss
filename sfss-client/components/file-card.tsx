@@ -6,34 +6,31 @@ import { Badge } from "./ui/badge"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
 import { Label } from "./ui/label"
 import { Input } from "./ui/input"
+import { FileData } from "@/lib/types"
 
-const data = {
-  id: "655a1b2c3d4e5f6789012345", // Dummy MongoDB ObjectId (24 hex characters)
-  fileName: "NotebookLM Mind Map.png",
-  fileType: "image",
-  s3Key: "uploads/ca16f7c3-4a74-4e7a-9637-2b476fb0508f-NotebookLM Mind Map.png",
-  fileUrl: "https://your-s3-bucket.com/uploads/notebooklm-mind-map.png", // Dummy URL
-  status: "uploaded", // Status implied by "Time Remaining"
-  accessCode: 187052,
-  targetUserEmails: [
-    "bob@email.com", "alice@email.com"
-  ],
-  expiryDurationMinutes: 5,
-  // Calculated: 5 minutes before the expiry time shown in the image
-  firstAccessedAt: "2025-11-17T15:43:19.000Z", 
-  // Taken directly from the image (3:48:19 PM)
-  expiresAt: "2025-11-17T15:48:19.000Z", 
-  // Dummy creation time (slightly before access)
-  createdAt: "2025-11-17T15:40:00.000Z" 
-}
+// const data = {
+//   id: "655a1b2c3d4e5f6789012345", // Dummy MongoDB ObjectId (24 hex characters)
+//   fileName: "NotebookLM Mind Map.png",
+//   fileType: "image",
+//   s3Key: "uploads/ca16f7c3-4a74-4e7a-9637-2b476fb0508f-NotebookLM Mind Map.png",
+//   fileUrl: "https://your-s3-bucket.com/uploads/notebooklm-mind-map.png", // Dummy URL
+//   status: "uploaded", // Status implied by "Time Remaining"
+//   accessCode: 187052,
+//   targetUserEmails: [
+//     "bob@email.com", "alice@email.com"
+//   ],
+//   expiryDurationMinutes: 5,
+//   // Calculated: 5 minutes before the expiry time shown in the image
+//   firstAccessedAt: "2025-11-17T15:43:19.000Z", 
+//   // Taken directly from the image (3:48:19 PM)
+//   expiresAt: "2025-11-17T15:48:19.000Z", 
+//   // Dummy creation time (slightly before access)
+//   createdAt: "2025-11-17T15:40:00.000Z" 
+// }
 
-export function FileCard() {
-
-  function capitalize(string: String) {
-    if (string.length === 0) {
-      return "";
-    }
-    return string.charAt(0).toUpperCase() + string.slice(1);
+export function FileCard({ data }: { data: FileData }) {
+  function capitalize(str: string) {
+    return str.length === 0 ? "" : str.charAt(0).toUpperCase() + str.slice(1)
   }
 
   return (

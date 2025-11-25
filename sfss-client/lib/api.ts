@@ -81,6 +81,20 @@ export async function getProfile(token: string) {
   })
 }
 
+export async function getIncomingFiles(token: string) {
+  return request("/api/upload/shared-with-me", {
+    method: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function getUserUploadedFiles(token: string) {
+  return request("/api/upload/my-files", {
+    method: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
 export function logout() {
   localStorage.removeItem("token")
   localStorage.removeItem("user")

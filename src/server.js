@@ -25,8 +25,31 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 
+// app.use(cors({
+//   origin: 'http://localhost:3000', // or '*' for dev
+//   credentials: true,
+//   methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+//   allowedHeaders: ['Content-Type','Authorization']
+// }));
+
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:4000',
+  // 'https://mydomain.com'
+];
+
 app.use(cors({
-  origin: 'http://localhost:3000', // or '*' for dev
+  origin: function (origin, callback) {
+    // Allow requests with no origin (e.g., mobile apps, curl, Postman)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      logger.warn(`Origin Blocked: ${origin}`)
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET','POST','PUT','DELETE','OPTIONS'],
   allowedHeaders: ['Content-Type','Authorization']

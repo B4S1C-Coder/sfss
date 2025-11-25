@@ -133,6 +133,30 @@ class UploadController {
     });
   }
 
+  @Get('/shared-with-me', ['authenticate'])
+  async getSharedFiles(req, res) {
+    const userEmail = req.user.email;
+    const files = await this.fileService.getFilesSharedWithUser(userEmail);
+
+    res.json({
+      success: true,
+      data: files.map(file => ({
+        id: file._id,
+        fileName: file.fileName,
+        fileType: file.fileType,
+        s3Key: file.s3Key,
+        fileUrl: file.fileUrl,
+        status: file.status,
+        targetUserEmails: file.targetUserEmails,
+        expiryDurationMinutes: file.expiryDurationMinutes,
+        firstAccessedAt: file.firstAccessedAt,
+        expiresAt: file.expiresAt,
+        createdAt: file.createdAt,
+        uploadedBy: file.userId
+      }))
+    });
+  }
+
   @Get('/file/:key', ['authenticate'])
   async getFileDetails(req, res) {
     const s3Key = req.params.key;

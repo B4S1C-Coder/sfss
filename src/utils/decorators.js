@@ -96,6 +96,7 @@
 
 const express = require('express');
 const asyncHandler = require('./asyncHandler');
+const logger = require('../config/logger');
 
 // Store metadata about controllers and routes
 const controllerMetadata = new Map();
@@ -164,6 +165,9 @@ function buildRoutes(container) {
   for (const [controllerName, metadata] of controllerMetadata) {
     const instanceName = controllerName.charAt(0).toLowerCase() + controllerName.slice(1);
 
+    console.log(`\n[buildRoutes] controllerName=${controllerName}, instanceName=${instanceName}, basePath=${metadata?.basePath}`);
+
+
     // ensure container can resolve controller
     if (!container || typeof container.resolve !== 'function') {
       throw new Error('A DI container with .resolve() is required to build routes.');
@@ -172,7 +176,9 @@ function buildRoutes(container) {
     let controllerInstance;
     try {
       controllerInstance = container.resolve(instanceName);
+      console.log(`[buildRoutes] resolved instance for ${instanceName}`);
     } catch (err) {
+      console.error(`[buildRoutes] Failed to resolve controller instance "${instanceName}":`, err && err.message ? err.message : err);
       throw new Error(`Failed to resolve controller instance "${instanceName}" from container: ${err.message}`);
     }
 
@@ -238,6 +244,8 @@ function buildRoutes(container) {
         ...resolvedMiddlewares,
         wrappedHandler
       );
+
+      logger.info(`Registered route: ${route.path}`);
     });
 
     router.use(metadata.basePath, controllerRouter);

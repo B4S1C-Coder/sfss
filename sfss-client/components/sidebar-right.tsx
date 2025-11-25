@@ -58,6 +58,7 @@ export function SidebarRight({
         <DatePicker />
         <SidebarSeparator className="mx-0" />
         {/* <Calendars calendars={data.calendars} /> */}
+        <p className="m-2">This demo is just a preview hosted on free tier (serverless containers). As such your files may not be retained.</p>
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>

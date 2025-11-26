@@ -27,6 +27,8 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { Button } from "./ui/button"
+import { FileUpload } from "./file-upload"
 
 // This is sample data.
 const data = {
@@ -61,11 +63,6 @@ const data = {
       badge: "10",
     },
     {
-      title: "Share File",
-      url: "#",
-      icon: Plus,
-    },
-    {
       title: "Settings",
       url: "#",
       icon: Settings2,
@@ -95,8 +92,8 @@ export function SidebarLeft({
         <NavMain items={data.navMain} />
       </SidebarHeader>
       <SidebarContent>
-        {/* <NavFavorites favorites={data.favorites} />
-        <NavWorkspaces workspaces={data.workspaces} /> */}
+        {/* <Button variant="outline" className="m-2 mt-10"><Plus /> Add</Button> */}
+        <FileUpload />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarRail />

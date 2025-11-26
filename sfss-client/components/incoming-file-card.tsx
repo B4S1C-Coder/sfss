@@ -9,6 +9,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { getFileDownloadLink } from "@/lib/api"
 import { FileData } from "@/lib/types"
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "./ui/input-otp"
+import { toast } from "sonner"
 
 export function IncomingFileCard({ data }: { data: FileData }) {
   const [otp, setOtp] = useState("")
@@ -30,8 +31,24 @@ export function IncomingFileCard({ data }: { data: FileData }) {
       return
     }
 
-    alert(`Download link is: ${res.data.downloadUrl}`)
-    // ...
+    try {
+      await navigator.clipboard.writeText(String(res.data.downloadUrl));
+    } catch {}
+
+    toast("Download link ready!", {
+      description: `Your download link is: ${res.data.downloadUrl}`,
+      action: {
+        label: "Copy",
+        onClick: async () => {
+          try {
+            await navigator.clipboard.writeText(String(res.data.downloadUrl));
+            toast("Copied!", { description: "Download link copied to clipboard." });
+          } catch {
+            toast("Failed to copy");
+          }
+        }
+      }
+    })
   }
 
   return (

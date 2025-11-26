@@ -12,3 +12,24 @@ export type FileData = {
   expiresAt: string
   createdAt: string
 }
+
+export type PreSignedUrlResponse = {
+  success: boolean
+  data: {
+    uploadUrl: string
+    key: string
+    fileUrl: string
+    accessCode: string
+    expiryDurationMinutes: number
+    targetUserEmails: string[]
+  }
+  message: string
+}
+
+export type PreSignedUrlPayload = {
+  fileName: string
+  fileType: string
+  folder: string
+  targetUserEmails: string[]
+  expiryDurationMinutes: string | number
+}

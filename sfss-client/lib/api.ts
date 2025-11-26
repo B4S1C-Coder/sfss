@@ -1,3 +1,5 @@
+import { PreSignedUrlPayload, PreSignedUrlResponse } from "./types"
+
 export type SignupPayload = {
   name: string
   email: string
@@ -105,6 +107,28 @@ export async function getFileDownloadLink(token: string, s3key: string, accessCo
     body: JSON.stringify({
       s3Key: s3key, accessCode: accessCode
     }),
+  })
+}
+
+export async function getPreSignedUrl(token: string, payload: PreSignedUrlPayload) {
+  return request<PreSignedUrlResponse>("/api/upload/presigned-url", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function confirmUpload(token: string, key: string) {
+  return request("/api/upload/confirm", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ key }),
   })
 }
 

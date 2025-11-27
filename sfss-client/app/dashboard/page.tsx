@@ -35,7 +35,7 @@ export default function Page() {
                 <BreadcrumbList>
                   <BreadcrumbItem>
                     <BreadcrumbPage className="line-clamp-1">
-                      Sensitive File Sharing Service
+                      SecureShare - Secure File Sharing
                     </BreadcrumbPage>
                   </BreadcrumbItem>
                 </BreadcrumbList>

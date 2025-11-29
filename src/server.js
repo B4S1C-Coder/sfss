@@ -35,6 +35,7 @@ const PORT = process.env.PORT || 3000;
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:4000',
+  process.env.FRONTEND_URL,
   // 'https://mydomain.com'
 ];
 
